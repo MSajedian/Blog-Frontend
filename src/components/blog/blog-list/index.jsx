@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col } from "react-bootstrap";
 import BlogItem from "../blog-item";
+import uniqid from "uniqid";
 // import posts from "../../../data/posts.json";
 
 
@@ -25,7 +26,7 @@ export default class BlogList extends Component {
     return (
       <Row>
         {this.state.posts.map((post) => (
-          <Col md={4} style={{ marginBottom: 50 }}>
+          <Col md={4} style={{ marginBottom: 50 }} key={uniqid()}>
             <BlogItem key={post.title} {...post} />
           </Col>
         ))}
