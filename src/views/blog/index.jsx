@@ -2,17 +2,28 @@ import React, { Component } from "react";
 import { Container, Image } from "react-bootstrap";
 import { withRouter } from "react-router";
 import BlogAuthor from "../../components/blog/blog-author";
-import posts from "../../data/posts.json";
 import "./styles.css";
 class Blog extends Component {
   state = {
+    posts: [],
     blog: {},
     loading: true,
   };
-  componentDidMount() {
+
+  componentDidMount = async () => {
+    const apiUrl = process.env.REACT_APP_LOCAL_API_URL
+    console.log("url", `${apiUrl}/blogPosts`);
+    const resp = await fetch(`${apiUrl}/blogPosts`, {
+      headers: {
+        Origin: 'http://localhost:3000'
+      }
+    })
+    const posts = await resp.json()
+    this.setState({ posts: posts })
+    // **********************
     const { id } = this.props.match.params;
-    console.log(posts);
-    const blog = posts.find((post) => post._id.toString() === id);
+    console.log(this.state.posts);
+    const blog = this.state.posts.find((post) => post._id.toString() === id);
     if (blog) {
       this.setState({ blog, loading: false });
     } else {
