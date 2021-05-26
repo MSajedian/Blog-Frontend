@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Container, Image } from "react-bootstrap";
+import { Container, Image, Button } from "react-bootstrap";
 import { withRouter } from "react-router";
 import BlogAuthor from "../../components/blog/blog-author";
 import "./styles.css";
+
 class Blog extends Component {
   state = {
     posts: [],
@@ -30,6 +31,20 @@ class Blog extends Component {
       this.props.history.push("/404");
     }
   }
+  downloadPost = async () => {
+    const apiUrl = process.env.REACT_APP_LOCAL_API_URL
+    console.log("url", `${apiUrl}/blogPosts`);
+    const { id } = this.props.match.params;
+    // const resp = await fetch(`http://127.0.0.1:3001/blogPosts/pdfDownload/${id}`, {
+      const resp = await fetch(`${apiUrl}/blogPosts/pdfDownload/${id}`, {
+      headers: {
+        Origin: 'http://localhost:3000'
+      }
+    })
+    const pdf = await resp.json()
+    console.log(pdf);
+    this.setState({ pdf: pdf })
+  }
 
   render() {
     const { loading, blog } = this.state;
@@ -51,7 +66,7 @@ class Blog extends Component {
                 <div>{`${blog.readTime.value} ${blog.readTime.unit} read`}</div>
               </div>
             </div>
-
+            <Button onClick={this.downloadPost}>Download Post in PDF</Button>
             <div dangerouslySetInnerHTML={{ __html: blog.content }}></div>
           </Container>
         </div>
