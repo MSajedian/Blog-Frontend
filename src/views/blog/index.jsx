@@ -31,6 +31,7 @@ class Blog extends Component {
       this.props.history.push("/404");
     }
   }
+
   downloadPost = async () => {
     const apiUrl = process.env.REACT_APP_LOCAL_API_URL
     console.log("url", `${apiUrl}/blogPosts`);
@@ -66,7 +67,7 @@ class Blog extends Component {
                 <div>{`${blog.readTime.value} ${blog.readTime.unit} read`}</div>
               </div>
             </div>
-            <Button onClick={this.downloadPost}>Download Post in PDF</Button>
+            <Button onClick={this.downloadPost}>Create PDF</Button>
             <div dangerouslySetInnerHTML={{ __html: blog.content }}></div>
           </Container>
         </div>
