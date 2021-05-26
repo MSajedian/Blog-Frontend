@@ -16,7 +16,7 @@ class Blog extends Component {
     console.log("url", `${apiUrl}/blogPosts`);
     const resp = await fetch(`${apiUrl}/blogPosts`, {
       headers: {
-        Origin: 'http://localhost:3000'
+        Origin: process.env.REACT_APP_FRONTEND_API_URL
       }
     })
     const posts = await resp.json()
