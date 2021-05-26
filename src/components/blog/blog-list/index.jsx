@@ -9,7 +9,7 @@ export default class BlogList extends Component {
   state = { posts: [] }
 
   componentDidMount = async () => {
-    const apiUrl = process.env.REACT_APP_LOCAL_API_URL
+    const apiUrl = process.env.REACT_APP_BACKEND_API_URL
     console.log("url", `${apiUrl}/blogPosts`);
     const resp = await fetch(`${apiUrl}/blogPosts`,{
       headers:{

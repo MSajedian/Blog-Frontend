@@ -12,7 +12,7 @@ class Blog extends Component {
   };
 
   componentDidMount = async () => {
-    const apiUrl = process.env.REACT_APP_LOCAL_API_URL
+    const apiUrl = process.env.REACT_APP_BACKEND_API_URL
     console.log("url", `${apiUrl}/blogPosts`);
     const resp = await fetch(`${apiUrl}/blogPosts`, {
       headers: {
@@ -32,19 +32,46 @@ class Blog extends Component {
     }
   }
 
-  downloadPost = async () => {
-    const apiUrl = process.env.REACT_APP_LOCAL_API_URL
-    console.log("url", `${apiUrl}/blogPosts`);
+  getPDF = async () => {
     const { id } = this.props.match.params;
-    // const resp = await fetch(`http://127.0.0.1:3001/blogPosts/pdfDownload/${id}`, {
-      const resp = await fetch(`${apiUrl}/blogPosts/pdfDownload/${id}`, {
+    const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+    fetch(`${apiUrl}/blogPosts/pdfDownload/${id}`, {
       headers: {
-        Origin: 'http://localhost:3000'
-      }
+        "Content-Type": "application/json",
+        Origin: process.env.REACT_APP_FRONTEND_API_URL,
+      },
     })
-    const pdf = await resp.json()
-    console.log(pdf);
-    this.setState({ pdf: pdf })
+      .then((response) => response.blob())
+      .then((blob) => URL.createObjectURL(blob))
+      .then((url) => {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "blog.pdf";
+        a.click();
+      })
+      .catch((err) => console.error(err));
+  };
+
+  downloadPost = async () => {
+    const { id } = this.props.match.params;
+    const apiUrl = process.env.REACT_APP_BACKEND_API_URL;
+    fetch(`${apiUrl}/blogPosts/pdfDownload/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Origin: process.env.REACT_APP_FRONTEND_API_URL,
+      },
+    })
+  //   const apiUrl = process.env.REACT_APP_BACKEND_API_URL
+  //   console.log("url", `${apiUrl}/blogPosts`);
+  //   const { id } = this.props.match.params;
+  //     const resp = await fetch(`${apiUrl}/blogPosts/pdfDownload/${id}`, {
+  //     headers: {
+  //       Origin: 'http://localhost:3000'
+  //     }
+  //   })
+  //   const pdf = await resp.json()
+  //   console.log(pdf);
+  //   this.setState({ pdf: pdf })
   }
 
   render() {
@@ -67,7 +94,7 @@ class Blog extends Component {
                 <div>{`${blog.readTime.value} ${blog.readTime.unit} read`}</div>
               </div>
             </div>
-            <Button onClick={this.downloadPost}>Create PDF</Button>
+            <Button onClick={this.getPDF}>Create PDF</Button>
             <div dangerouslySetInnerHTML={{ __html: blog.content }}></div>
           </Container>
         </div>
